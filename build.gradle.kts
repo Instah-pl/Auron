@@ -7,5 +7,5 @@ allprojects {
     }
 
     group = "pl.instah.auron"
-    version = "1.0.3A"
+    version = "1.0.4A"
 }
