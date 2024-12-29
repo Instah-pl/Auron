@@ -1,5 +1,6 @@
 package com.example
 
+import AppManager
 import AppManager.counter
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -12,7 +13,7 @@ import androidx.compose.ui.unit.dp
 import pl.instah.auron.auronApp
 import pl.instah.auron.ui.Center
 
-fun main() = auronApp {
+fun main() = auronApp("Example") {
     MaterialTheme(
         colorScheme = darkColorScheme()
     ) {

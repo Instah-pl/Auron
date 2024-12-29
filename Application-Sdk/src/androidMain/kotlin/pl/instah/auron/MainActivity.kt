@@ -7,6 +7,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import pl.instah.auron.runtimeManager.permissionRequestLauncher
 import pl.instah.auron.utils.permissionNamesToConfiguredPermissions
 import kotlin.system.exitProcess
 

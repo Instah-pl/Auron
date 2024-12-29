@@ -1,5 +1,4 @@
 package pl.instah.auron.utils
-
 import pl.instah.auron.ConfiguredPermission
 
 fun permissionNamesToConfiguredPermissions(permissionNames: Set<String>): List<ConfiguredPermission> {

@@ -13,10 +13,21 @@ kotlin {
         publishLibraryVariants("release")
     }
 
+    jvm()
+
     sourceSets {
         androidMain.dependencies {
             api("androidx.activity:activity-compose:1.9.3")
+
+        }
+
+        commonMain.dependencies {
             api(project(":Sdk"))
+            implementation(compose.foundation)
+        }
+
+        jvmMain.dependencies {
+            implementation(compose.desktop.currentOs)
         }
     }
 }

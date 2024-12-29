@@ -2,7 +2,8 @@ package pl.instah.auron
 
 import androidx.compose.runtime.Composable
 
-fun auronApp(
+actual fun auronApp(
+    title: String,
     ui: @Composable () -> Unit
 ) {
     if (AuronRuntimeAppManager.initSetContentLambda == null) throw Exception("UI initialization not available")

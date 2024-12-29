@@ -20,14 +20,13 @@
 \*simplification of the process is planned
 
 TODO:
-- [ ] permissions api (partially present)
 - [ ] setting the app icon
 - [ ] minification support
 - [ ] whole project as common code
 - [ ] automatic svg -> xml conversion
 - [ ] stop using android.application and android.library plugins
-- [ ] permission support
-- [ ] common APIs
+- [X] permission support
+- [X] common APIs
 - [ ] common native API composables (like camera view)
 - [ ] support for translations that doesn't use XML
 - [ ] apple targets support

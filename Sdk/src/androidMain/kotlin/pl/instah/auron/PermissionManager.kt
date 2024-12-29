@@ -2,6 +2,7 @@ package pl.instah.auron
 
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
+import pl.instah.auron.runtimeManager.permissionRequestLauncher
 
 object PermissionManager {
     data class PermissionDecisionResult(

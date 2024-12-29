@@ -37,6 +37,8 @@ fun KotlinMultiplatformExtension.auron(
     val auronMain = sourceSets.create("auronMain") {
         it.kotlin.srcDir("src/auronMain/kotlin")
         it.resources.srcDir("src/auronMain/resources")
+
+        it.dependsOn(sourceSets.getByName("commonMain"))
     }
 
     val auronGeneratedMain: KotlinSourceSet? = sourceSets.create("auronGeneratedMain") {
@@ -82,9 +84,9 @@ fun KotlinMultiplatformExtension.auron(
 
         it.dependencies {
             if (config.isALibrary) {
-                implementation("pl.instah.auron:Sdk:1.0.0A")
+                implementation(auron.sdk)
             } else {
-                implementation("pl.instah.auron:Application-Sdk:1.0.0A")
+                implementation(auron.appSdk)
             }
         }
     }
