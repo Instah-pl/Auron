@@ -5,4 +5,4 @@ class Auron(
     val appSdk = "pl.instah.auron:Application-Sdk:$version"
 }
 
-val auron = Auron("1.0.0A")
+val auron = Auron("1.0.1A")

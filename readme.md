@@ -12,7 +12,7 @@
 2. You need to use the gradle taks on the following modules to publish the following modules to maven local
   :Application-Sdk :Sdk :Permissions :Plugin
 3. Add maven local to your project's repos (both for dependencies as well as plugins)
-4. Now add the auron plugin by using `id("pl.instah.Auron-Gradle") version "1.0.0A"`
+4. Now add the auron plugin by using `id("pl.instah.Auron-Gradle") version "1.0.1A"`
 5. Download the android sdk version `35`
 6. Create a local.properties file and setup the android sdk dir
 7. You should be now able to easily configure your project with auron
