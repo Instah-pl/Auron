@@ -1,7 +1,10 @@
+import com.vanniktech.maven.publish.SonatypeHost
+
 plugins {
     kotlin("jvm")
     `java-gradle-plugin`
-    `maven-publish`
+    id("com.vanniktech.maven.publish") version "0.30.0"
+    signing
 }
 
 gradlePlugin {
@@ -13,9 +16,39 @@ gradlePlugin {
     }
 }
 
-publishing {
-    repositories {
-        mavenLocal()
+mavenPublishing {
+    publishToMavenCentral(SonatypeHost.CENTRAL_PORTAL)
+    signAllPublications()
+
+    coordinates(group.toString(), "gradle-plugin", version.toString())
+
+    pom {
+        name = "Auron Gradle Plugin"
+        description = "The Auron Gradle Plugin"
+
+        inceptionYear = "2023"
+        url = "https://github.com/instah-pl/auron"
+
+        developers {
+            developer {
+                id = "rebokdev"
+                name = "rebokdev"
+                email = "rebok@duck.com"
+            }
+        }
+
+        licenses {
+            license {
+                name = "MIT license"
+                url = "https://opensource.org/licenses/MIT"
+            }
+        }
+
+        scm {
+            connection = "scm:git:https://github.com/instah-pl/auron.git"
+            developerConnection = "scm:git:git@github.com:instah-pl/auron.git"
+            url = "https://github.com/instah-pl/auron"
+        }
     }
 }
 
@@ -28,5 +61,10 @@ dependencies {
     implementation("org.jetbrains.compose:compose-gradle-plugin:1.7.1")
     implementation("org.jetbrains.kotlin.plugin.compose:org.jetbrains.kotlin.plugin.compose.gradle.plugin:2.1.0")
     implementation(project(":Permissions"))
+}
+
+signing {
+    useGpgCmd()
+    sign(publishing.publications)
 }
 

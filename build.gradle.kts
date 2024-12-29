@@ -1,11 +1,11 @@
 allprojects {
     repositories {
+        mavenLocal()
         mavenCentral()
         google()
         gradlePluginPortal()
-        mavenLocal()
     }
 
     group = "pl.instah.auron"
-    version = "1.0.1A"
+    version = "1.0.3A"
 }

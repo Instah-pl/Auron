@@ -1,9 +1,12 @@
+import com.vanniktech.maven.publish.SonatypeHost
+
 plugins {
     kotlin("multiplatform")
     id("com.android.library")
     id("org.jetbrains.compose")
     kotlin("plugin.compose")
-    `maven-publish`
+    id("com.vanniktech.maven.publish")
+    signing
 }
 
 kotlin {
@@ -29,14 +32,38 @@ kotlin {
     }
 }
 
-publishing {
-    repositories {
-        mavenLocal()
-    }
+mavenPublishing {
+    publishToMavenCentral(SonatypeHost.CENTRAL_PORTAL)
+    signAllPublications()
 
-    publications {
-        create<MavenPublication>("maven") {
-            from(components["kotlin"])
+    coordinates(group.toString(), "sdk", version.toString())
+
+    pom {
+        name = "Auron SDK"
+        description = "The SDK for Auron"
+
+        inceptionYear = "2023"
+        url = "https://github.com/instah-pl/auron"
+
+        developers {
+            developer {
+                id = "rebokdev"
+                name = "rebokdev"
+                email = "rebok@duck.com"
+            }
+        }
+
+        licenses {
+            license {
+                name = "MIT license"
+                url = "https://opensource.org/licenses/MIT"
+            }
+        }
+
+        scm {
+            connection = "scm:git:https://github.com/instah-pl/auron.git"
+            developerConnection = "scm:git:git@github.com:instah-pl/auron.git"
+            url = "https://github.com/instah-pl/auron"
         }
     }
 }
@@ -52,4 +79,9 @@ android {
     buildFeatures {
         compose = true
     }
+}
+
+signing {
+    useGpgCmd()
+    sign(publishing.publications)
 }
