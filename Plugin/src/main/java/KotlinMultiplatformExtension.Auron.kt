@@ -1,8 +1,6 @@
 import com.android.build.gradle.BaseExtension
 import korlibs.io.file.std.get
 import korlibs.io.file.std.localVfs
-import korlibs.io.lang.Properties
-import kotlinx.coroutines.runBlocking
 import manifest.generateManifest
 import org.jetbrains.kotlin.gradle.ExternalKotlinTargetApi
 import org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension
@@ -21,22 +19,15 @@ fun KotlinMultiplatformExtension.auron(
 
     androidTarget()
 
-    val localProperties = localVfs(this.project.rootProject.projectDir.absolutePath)["local.properties"]
+    introducePropertyIfNotPresent(
+        file = localVfs(this.project.rootProject.projectDir.absolutePath)["local.properties"],
+        property = "sdk.dir", value = getSdkDir()
+    )
 
-    if (!runBlocking { localProperties.exists() }) {
-        runBlocking {
-            localProperties.writeString(
-                Properties(mapOf("sdk.dir" to getSdkDir())).toString()
-            )
-        }
-    } else {
-        val localPropertiesContent = Properties.parseString(runBlocking { localProperties.readString() })
-
-        if (!localPropertiesContent.contains("sdk.dir")) {
-            localPropertiesContent["sdk.dir"] = getSdkDir()
-            runBlocking { localProperties.writeString(localPropertiesContent.toString()) }
-        }
-    }
+    introducePropertyIfNotPresent(
+        file = localVfs(this.project.rootProject.projectDir.absolutePath)["gradle.properties"],
+        property = "android.useAndroidX", value = "true"
+    )
 
     val androidExtension = project.extensions.findByName("android") as? BaseExtension
     androidExtension?.namespace = project.group.toString()

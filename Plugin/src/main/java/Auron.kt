@@ -1,3 +1,5 @@
+import pl.instah.auron.Plugin.BuildConfig
+
 class Auron(
     version: String
 ) {
@@ -6,4 +8,4 @@ class Auron(
     val permissions = "pl.instah.auron:permissions:$version"
 }
 
-val auron = Auron("1.0.3A")
+val auron = Auron(BuildConfig.version)

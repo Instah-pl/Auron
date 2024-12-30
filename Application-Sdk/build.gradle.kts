@@ -21,7 +21,6 @@ kotlin {
     sourceSets {
         androidMain.dependencies {
             api("androidx.activity:activity-compose:1.9.3")
-
         }
 
         commonMain.dependencies {
