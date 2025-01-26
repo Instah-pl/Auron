@@ -1,9 +1,9 @@
 package pl.instah.auron
 
 enum class Permission(
-    val underlyingPermissionNames: List<String>,
-    val underlyingUsedFeatureNames: List<String> = listOf()
+    val underlyingPermissionNames: Set<String>,
+    val underlyingUsedFeatureNames: Set<String> = setOf()
 ) {
-    LOCATION(listOf("android.permission.ACCESS_FINE_LOCATION", "android.permission.ACCESS_COARSE_LOCATION")),
-    CAMERA(listOf("android.permission.CAMERA"), listOf("android.hardware.camera"))
+    LOCATION(setOf("android.permission.ACCESS_FINE_LOCATION", "android.permission.ACCESS_COARSE_LOCATION")),
+    CAMERA(setOf("android.permission.CAMERA"), setOf("android.hardware.camera"))
 }

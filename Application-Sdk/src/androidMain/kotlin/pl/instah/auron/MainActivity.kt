@@ -1,14 +1,24 @@
 package pl.instah.auron
 
+import android.content.Context
+import android.content.Intent
+import android.content.pm.PackageManager
+import android.net.Uri
 import android.os.Bundle
+import android.provider.Settings
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.result.contract.ActivityResultContracts
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import pl.instah.auron.permissions.PermissionDecisionResult
+import pl.instah.auron.permissions.PermissionManager
+import pl.instah.auron.permissions.PermissionManagerCommon
+import pl.instah.auron.runtimeManager.checkIsManualPermissionGrantRequired
+import pl.instah.auron.runtimeManager.checkIsPermissionGranted
+import pl.instah.auron.runtimeManager.goToAppSettings
 import pl.instah.auron.runtimeManager.permissionRequestLauncher
-import pl.instah.auron.utils.permissionNamesToConfiguredPermissions
 import kotlin.system.exitProcess
 
 class MainActivity : ComponentActivity() {
@@ -22,32 +32,60 @@ class MainActivity : ComponentActivity() {
         @Suppress("UNCHECKED_CAST")
         val fieldValue = field.get(mainLinkClassInstance) as () -> Unit
 
+        AuronRuntimeManager.checkIsPermissionGranted = {
+            this.checkSelfPermission(it) == PackageManager.PERMISSION_GRANTED
+        }
+
+        AuronRuntimeManager.checkIsManualPermissionGrantRequired = lambda@{
+            if (
+                getSharedPreferences("auron:app-data", MODE_PRIVATE)
+                    .getBoolean("initial-permission-grant-${it}", true)
+            ) {
+                return@lambda false
+            }
+
+            return@lambda !shouldShowRequestPermissionRationale(it)
+        }
+
+        AuronRuntimeManager.goToAppSettings = {
+            val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
+            intent.data = Uri.parse("package:${baseContext.packageName}")
+            startActivity(intent)
+        }
+
         AuronRuntimeManager.permissionRequestLauncher = registerForActivityResult(
             ActivityResultContracts.RequestMultiplePermissions()
         ) { permissions: Map<String, Boolean> ->
-            val permissionsDenied = permissions.filter { !it.value }.map { it.key }
-
             CoroutineScope(Dispatchers.Default).launch {
-                val permissionsGranted = permissionNamesToConfiguredPermissions(
-                    permissionNames = permissions.filter { it.value }.map { it.key }.toSet()
-                ).toSet()
+                permissions.map { it.key }.forEach { permissionName ->
+                    if (
+                        getSharedPreferences("auron:app-data", MODE_PRIVATE)
+                            .getBoolean("initial-permission-grant-$permissionName", true)
+                    ) {
+                        getSharedPreferences("auron:app-data", MODE_PRIVATE).edit().putBoolean(
+                            "initial-permission-grant-$permissionName", false
+                        ).apply()
+                    }
+                }
 
-                val permissionsGrantedCommon = permissionsGranted.map { it.permission() }
-
-                PermissionManager.onPermissionDecision.emit(
-                    PermissionManager.PermissionDecisionResult(
-                        permissionsGranted = permissionsGranted, permissionsDenied = Permission.entries
-                            .filter { permission ->
-                                permission.underlyingPermissionNames.any { permissionsDenied.contains(it) }
-                            }.filter { !permissionsGrantedCommon.contains(it) }.toSet()
+                PermissionManagerCommon.onPermissionDecision.emit(
+                    PermissionDecisionResult(
+                        permissionsGranted = ConfiguredPermission.getPermissionInstances(
+                            permissions.filter { it.value }.map { it.key }
+                        ), permissionsDeniedAdvanced = ConfiguredPermission
+                            .getPermissionInstancesBasedOnPartialPermissionNames(
+                                permissions.filter { !it.value }.map { it.key }
+                            ).associate { permission ->
+                                PermissionManager.checkIsManualInterventionRequired(permission) to permission
+                            }
                     )
                 )
             }
         }
 
-        AuronRuntimeAppManager.initSetContentLambda = {
+        AuronRuntimeAppManager.initSetContentLambda = { content ->
             setContent(
-                content = it
+                content = content
             )
         }
 
@@ -66,6 +104,5 @@ class MainActivity : ComponentActivity() {
         deviceId: Int
     ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults, deviceId)
-        throw Exception(permissions.toString())
     }
 }

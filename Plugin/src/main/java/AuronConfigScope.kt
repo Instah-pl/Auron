@@ -67,7 +67,12 @@ class AuronConfigScope {
         )
     }
 
+    @Deprecated("Replaced with the unary plus operator (`+ Permission`)")
     operator fun Permission.invoke() {
+        permissions.add(this)
+    }
+
+    operator fun Permission.unaryPlus() {
         permissions.add(this)
     }
 }

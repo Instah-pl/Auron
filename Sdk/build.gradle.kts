@@ -20,14 +20,14 @@ kotlin {
 
     sourceSets {
         androidMain.dependencies {
-            api("androidx.activity:activity-compose:1.9.3")
-            api(project(":Permissions"))
+            api("androidx.activity:activity-compose:1.10.0")
         }
 
         commonMain.dependencies {
             implementation(compose.ui)
             implementation(compose.foundation)
             implementation(compose.runtime)
+            api(project(":Permissions"))
         }
     }
 }

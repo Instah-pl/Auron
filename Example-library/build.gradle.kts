@@ -1,5 +1,7 @@
+import pl.instah.auron.Permission
+
 plugins {
-    id("pl.instah.Auron-Gradle") version "1.0.5A"
+    id("pl.instah.Auron-Gradle") version "1.0.6A"
     kotlin("multiplatform")
     id("com.android.library")
 }
@@ -7,6 +9,8 @@ plugins {
 kotlin {
     auron {
         library()
+
+        +Permission.LOCATION
     }
 
     jvm()

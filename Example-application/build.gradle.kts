@@ -3,7 +3,7 @@
 import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
 
 plugins {
-    id("pl.instah.Auron-Gradle") version "1.0.5A"
+    id("pl.instah.Auron-Gradle") version "1.0.6A"
     kotlin("multiplatform")
     id("com.android.application")
 }
