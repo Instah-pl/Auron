@@ -10,7 +10,7 @@
     - `id("com.android.application") version "8.7.3"` or `id("com.android.library") version "8.7.3"`
    \* based on your project type
     - `kotlin("multiplatform")`
-2. Now add the auron plugin by using `id("pl.instah.Auron-Gradle") version "1.0.5A"`
+2. Now add the auron plugin by using `id("pl.instah.Auron-Gradle") version "1.0.6A"`
 3. Download the android sdk version `35`
 
 You should be now able to easily configure your project with auron!
