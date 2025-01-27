@@ -9,9 +9,10 @@ import androidx.compose.ui.Modifier
 
 @Composable
 fun Center(
+    modifier: Modifier = Modifier,
     content: @Composable BoxScope.() -> Unit
 ) = Box(
-    modifier = Modifier.fillMaxSize(),
+    modifier = Modifier.fillMaxSize().then(modifier),
     contentAlignment = Alignment.Center
 ) {
     content()
