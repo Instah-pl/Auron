@@ -1,6 +1,5 @@
 package pl.instah.auron
 
-import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
@@ -12,6 +11,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.sync.withLock
 import pl.instah.auron.permissions.PermissionDecisionResult
 import pl.instah.auron.permissions.PermissionManager
 import pl.instah.auron.permissions.PermissionManagerCommon
@@ -38,7 +38,7 @@ class MainActivity : ComponentActivity() {
 
         AuronRuntimeManager.checkIsManualPermissionGrantRequired = lambda@{
             if (
-                getSharedPreferences("auron:app-data", MODE_PRIVATE)
+                getSharedPreferences("auron:permission-data", MODE_PRIVATE)
                     .getBoolean("initial-permission-grant-${it}", true)
             ) {
                 return@lambda false
@@ -59,12 +59,14 @@ class MainActivity : ComponentActivity() {
             CoroutineScope(Dispatchers.Default).launch {
                 permissions.map { it.key }.forEach { permissionName ->
                     if (
-                        getSharedPreferences("auron:app-data", MODE_PRIVATE)
+                        getSharedPreferences("auron:permission-data", MODE_PRIVATE)
                             .getBoolean("initial-permission-grant-$permissionName", true)
                     ) {
-                        getSharedPreferences("auron:app-data", MODE_PRIVATE).edit().putBoolean(
-                            "initial-permission-grant-$permissionName", false
-                        ).apply()
+                        AuronRuntimeAppManager.permissionDataPreferencesMutex.withLock {
+                            getSharedPreferences("auron:permission-data", MODE_PRIVATE).edit().putBoolean(
+                                "initial-permission-grant-$permissionName", false
+                            ).apply()
+                        }
                     }
                 }
 
