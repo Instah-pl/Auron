@@ -24,9 +24,10 @@ kotlin {
         }
 
         commonMain.dependencies {
-            implementation(compose.ui)
-            implementation(compose.foundation)
-            implementation(compose.runtime)
+            api(compose.ui)
+            api(compose.foundation)
+            api(compose.runtime)
+            api(compose.animation)
             api(project(":Permissions"))
         }
     }
