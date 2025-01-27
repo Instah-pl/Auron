@@ -107,4 +107,11 @@ class MainActivity : ComponentActivity() {
     ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults, deviceId)
     }
+
+    override fun onResume() {
+        super.onResume()
+        App.Callbacks.resume.registered.forEach {
+            it.value()
+        }
+    }
 }
