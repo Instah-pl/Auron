@@ -3,7 +3,7 @@
 import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
 
 plugins {
-    id("pl.instah.Auron-Gradle") version "1.0.6A"
+    id("io.instah.Auron-Gradle") version "1.1.0A"
     kotlin("multiplatform")
     id("com.android.application")
 }
@@ -26,6 +26,8 @@ kotlin {
             implementation(compose.material3)
             implementation(project(":Example-library"))
             implementation(auron.appSdk)
+            implementation(auron.voyager.navigator)
+            implementation(auron.voyager.transitions)
         }
     }
 }

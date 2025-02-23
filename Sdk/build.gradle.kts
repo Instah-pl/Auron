@@ -6,6 +6,7 @@ plugins {
     id("org.jetbrains.compose")
     kotlin("plugin.compose")
     id("com.vanniktech.maven.publish")
+    kotlin("plugin.serialization")
     signing
 }
 
@@ -29,6 +30,7 @@ kotlin {
             api(compose.runtime)
             api(compose.animation)
             api(project(":Permissions"))
+            implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.8.0")
         }
     }
 }
@@ -71,7 +73,7 @@ mavenPublishing {
 
 android {
     compileSdkVersion = "android-35"
-    namespace = "pl.instah.auron"
+    namespace = "io.instah.auron"
 
     defaultConfig {
         minSdk = 24

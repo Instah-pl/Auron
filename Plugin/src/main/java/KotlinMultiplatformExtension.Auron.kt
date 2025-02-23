@@ -1,22 +1,70 @@
 import com.android.build.gradle.BaseExtension
+import com.android.build.gradle.ProguardFiles.getDefaultProguardFile
 import korlibs.io.file.std.get
 import korlibs.io.file.std.localVfs
+import kotlinx.coroutines.runBlocking
+import kotlinx.serialization.json.Json
 import manifest.generateManifest
+import org.gradle.api.JavaVersion
 import org.jetbrains.kotlin.gradle.ExternalKotlinTargetApi
 import org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension
 import org.jetbrains.kotlin.gradle.plugin.KotlinSourceSet
+import java.io.File
 
 @OptIn(ExternalKotlinTargetApi::class)
 fun KotlinMultiplatformExtension.auron(
     auronConfiguration: AuronConfigScope.() -> Unit = {}
 ) {
-    this.jvmToolchain(17)
+    val auronPropertiesFile = localVfs(project.projectDir.absolutePath)["auron.json"]
+
     if (project.group.toString().isEmpty()) throw Exception("You must specify a group.")
 
     val scope = AuronConfigScope()
     auronConfiguration(scope)
     val config = scope.build()
 
+    val newAdditionalProperties = AuronAdditionalProperties(
+        useCompose = config.useCompose,
+        isALibrary = config.isLibrary
+    )
+
+    val json = Json {
+        prettyPrint = true
+    }
+
+    var stopExecution = false
+
+    runBlocking {
+        if (!auronPropertiesFile.exists()) {
+            auronPropertiesFile.writeString(
+                json.encodeToString(
+                    newAdditionalProperties
+                )
+            )
+
+            stopExecution = true
+            project.gradle.projectsEvaluated { }
+        } else {
+            if (Json.decodeFromString<AuronAdditionalProperties>(auronPropertiesFile.readString())
+                != newAdditionalProperties
+            ) {
+                auronPropertiesFile.writeString(
+                    json.encodeToString(
+                        newAdditionalProperties
+                    )
+                )
+
+                stopExecution = true
+                project.gradle.projectsEvaluated { }
+            }
+        }
+    }
+
+    if (stopExecution) {
+        return
+    }
+
+    this.jvmToolchain(17)
     androidTarget()
 
     introducePropertyIfNotPresent(
@@ -37,12 +85,32 @@ fun KotlinMultiplatformExtension.auron(
         it.minSdk = 24
         it.targetSdk = 35
 
-        if (!config.isALibrary) {
+        if (!config.isLibrary) {
             it.applicationId = "${project.group}.${config.applicationId}"
         }
     }
 
-    androidExtension?.buildFeatures?.compose = true
+    if (!config.isLibrary) {
+        androidExtension?.buildTypes {
+            it.getByName("release") {
+                it.setMinifyEnabled(config.isMinificationEnabled)
+                it.isShrinkResources = true
+                it.proguardFiles(
+                    getDefaultProguardFile("proguard-android.txt", project.layout.buildDirectory),
+                    File(localVfs(project.projectDir.absolutePath)["auron.pro"].absolutePath)
+                )
+            }
+        }
+    }
+
+    androidExtension?.compileOptions {
+        it.sourceCompatibility = JavaVersion.VERSION_17
+        it.targetCompatibility = JavaVersion.VERSION_17
+    }
+
+    if (config.useCompose) {
+        androidExtension?.buildFeatures?.compose = true
+    }
 
     val auronMain = sourceSets.create("auronMain") {
         it.kotlin.srcDir("src/auronMain/kotlin")
@@ -63,11 +131,11 @@ fun KotlinMultiplatformExtension.auron(
 
     val generatedCodeDir = auronGeneratedMain?.kotlin?.srcDirs?.first()
 
-    if (!config.isALibrary) {
+    if (!config.isLibrary) {
         generatedCodeDir?.mkdirs()
         generatedCodeDir?.get("mainLink.kt")?.writeText(
             text = """
-                    package pl.instah.auron
+                    package io.instah.auron
                 
                     class MainLink {
                         val link: () -> Unit = { ${project.group}.main() }
@@ -80,7 +148,7 @@ fun KotlinMultiplatformExtension.auron(
     sourceSetDirectory?.mkdirs()
 
     sourceSetDirectory?.get("AndroidManifest.xml")?.writeText(
-        text = config.manifestConfig.generateManifest()
+        text = config.manifestConfig.generateManifest(localVfs(project.projectDir.absolutePath))
     )
 
     sourceSetDirectory?.get("AndroidManifest.xml")?.let { manifestFileNotNull ->
@@ -93,11 +161,38 @@ fun KotlinMultiplatformExtension.auron(
         it.dependsOn(auronGeneratedMain!!)
 
         it.dependencies {
-            if (config.isALibrary) {
+            if (config.isLibrary) {
                 implementation(auron.sdk)
             } else {
                 implementation(auron.appSdk)
             }
         }
     }
+
+    //TODO: Finish this
+    /*//TODO: support SVG
+    val generateAppIconTask = project.task("generateAppIcon")
+
+    generateAppIconTask.doLast {
+        val commonMain = sourceSets.getByName("commonMain")
+        val auronMainResourceNames = auronMain.resources.map { it.name }
+        val commonMainResourceNames = commonMain.resources.map { it.name }
+
+        val iconFiles = if (auronMainResourceNames.contains("icon-foreground.png")
+            && auronMainResourceNames.contains("icon-background.png")
+        ) {
+            auronMain.resources.files.first { it.name == "icon-foreground.png" } to
+                    auronMain.resources.files.first { it.name == "icon-background.png" }
+        } else if (commonMainResourceNames.contains("icon-foreground.png")
+            && commonMainResourceNames.contains("icon-background.png")
+        ) {
+            commonMain.resources.files.first { it.name == "icon-foreground.png" } to
+                    commonMain.resources.files.first { it.name == "icon-background.png" }
+        } else null
+
+        val resDir = localVfs(auronGeneratedMain?.kotlin?.first()?.absolutePath!!).parent["res"]
+        runBlocking { resDir.mkdirs() }
+    }*/
+
+    //project.tasks.getByName("build").dependsOn(generateAppIconTask)
 }

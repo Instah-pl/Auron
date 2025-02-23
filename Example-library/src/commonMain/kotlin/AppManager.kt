@@ -4,8 +4,8 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import kotlinx.coroutines.sync.Mutex
-import pl.instah.auron.ConfiguredPermission
-import pl.instah.auron.permissions.PermissionManager
+import io.instah.auron.permissions.ConfiguredPermission
+import io.instah.auron.sdk.permissions.PermissionManager
 
 object AppManager {
     var state by mutableStateOf(0)

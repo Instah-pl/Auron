@@ -55,7 +55,7 @@ mavenPublishing {
 
 android {
     compileSdkVersion = "android-35"
-    namespace = "pl.instah.auron"
+    namespace = "io.instah.auron"
 
     defaultConfig {
         minSdk = 24

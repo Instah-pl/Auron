@@ -2,6 +2,7 @@ import com.vanniktech.maven.publish.SonatypeHost
 
 plugins {
     kotlin("jvm")
+    kotlin("plugin.serialization")
     `java-gradle-plugin`
     id("com.vanniktech.maven.publish") version "0.30.0"
     id("com.github.gmazzo.buildconfig") version "5.5.1"
@@ -15,7 +16,7 @@ buildConfig {
 gradlePlugin {
     plugins {
         create("Gradle") {
-            id = "pl.instah.Auron-Gradle"
+            id = "io.instah.Auron-Gradle"
             implementationClass = "AuronPlugin"
         }
     }
@@ -58,13 +59,14 @@ mavenPublishing {
 }
 
 dependencies {
-    implementation("org.jetbrains.kotlin.multiplatform:org.jetbrains.kotlin.multiplatform.gradle.plugin:2.1.0")
+    implementation("org.jetbrains.kotlin.multiplatform:org.jetbrains.kotlin.multiplatform.gradle.plugin:2.1.10")
     implementation("org.gradle.kotlin:gradle-kotlin-dsl-plugins:latest.release")
-    implementation("com.android.library:com.android.library.gradle.plugin:8.7.3")
-    implementation("com.android.application:com.android.application.gradle.plugin:8.7.3")
+    api("com.android.library:com.android.library.gradle.plugin:8.7.3")
+    api("com.android.application:com.android.application.gradle.plugin:8.7.3")
     implementation("com.soywiz.korge:korge-core:latest.release")
     implementation("org.jetbrains.compose:compose-gradle-plugin:1.7.3")
-    implementation("org.jetbrains.kotlin.plugin.compose:org.jetbrains.kotlin.plugin.compose.gradle.plugin:2.1.0")
+    implementation("org.jetbrains.kotlin.plugin.compose:org.jetbrains.kotlin.plugin.compose.gradle.plugin:2.1.10")
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.8.0")
     implementation(project(":Permissions"))
 }
 

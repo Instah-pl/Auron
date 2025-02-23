@@ -21,6 +21,7 @@ kotlin {
     sourceSets {
         androidMain.dependencies {
             api("androidx.activity:activity-compose:1.10.0")
+            compileOnly(project(":Main-Link-Dummy"))
         }
 
         commonMain.dependencies {
@@ -72,7 +73,7 @@ mavenPublishing {
 
 android {
     compileSdkVersion = "android-35"
-    namespace = "pl.instah.auron"
+    namespace = "io.instah.auron"
 
     defaultConfig {
         minSdk = 24

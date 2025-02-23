@@ -11,17 +11,29 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.*
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import io.instah.auron.auronApp
+import io.instah.auron.sdk.App
+import io.instah.auron.sdk.interaction.onResume
+import io.instah.auron.sdk.ui.Center
 import kotlinx.coroutines.launch
-import pl.instah.auron.App
-import pl.instah.auron.auronApp
-import pl.instah.auron.ui.Center
 
 fun main() = auronApp("Example") {
     val coroutineScope = rememberCoroutineScope()
+
+    DisposableEffect(Unit) {
+        onDispose {
+            println("hi!")
+        }
+    }
+
+    onResume {
+        println("On resume working!")
+    }
 
     MaterialTheme(
         colorScheme = darkColorScheme()
@@ -43,7 +55,7 @@ fun main() = auronApp("Example") {
                                 Button(
                                     onClick = { App.quit() }
                                 ) {
-                                    Text("Quit")
+                                    Text(ExampleTranslationScheme.exampleTranslationSchemeHolder.quit)
                                 }
 
                                 if (AppManager.state != 2) {

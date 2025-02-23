@@ -1,11 +1,12 @@
-import pl.instah.auron.Plugin.BuildConfig
+import io.instah.auron.Plugin.BuildConfig
 
 class Auron(
     val auronVersion: String
 ) {
-    val sdk = "pl.instah.auron:sdk:$auronVersion"
-    val appSdk = "pl.instah.auron:app-sdk:$auronVersion"
-    val permissions = "pl.instah.auron:permissions:$auronVersion"
+    val sdk = "io.instah.auron:sdk:$auronVersion"
+    val appSdk = "io.instah.auron:app-sdk:$auronVersion"
+    val permissions = "io.instah.auron:permissions:$auronVersion"
+    val voyager = Voyager
 
     object Voyager {
         val navigator = "cafe.adriel.voyager:voyager-navigator:latest.release"

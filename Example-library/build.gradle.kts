@@ -1,9 +1,8 @@
-import pl.instah.auron.Permission
+import io.instah.auron.permissions.Permission
 
 plugins {
-    id("pl.instah.Auron-Gradle") version "1.0.6A"
+    id("io.instah.Auron-Gradle") version "1.1.0A"
     kotlin("multiplatform")
-    id("com.android.library")
 }
 
 kotlin {
@@ -15,10 +14,11 @@ kotlin {
 
     jvm()
 
-    sourceSets {
+sourceSets {
         commonMain.dependencies {
             implementation(compose.runtime)
             implementation(auron.sdk)
         }
     }
+
 }
