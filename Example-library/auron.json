@@ -1,4 +1,8 @@
 {
-    "useCompose": true,
-    "isALibrary": true
+    "targets": [
+        "Android",
+        "Desktop",
+        "Web"
+    ],
+    "useCompose": true
 }

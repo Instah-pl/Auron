@@ -1,24 +1,16 @@
 import io.instah.auron.permissions.Permission
 
 plugins {
-    id("io.instah.Auron-Gradle") version "1.1.0A"
-    kotlin("multiplatform")
+    id("io.instah.Auron-Gradle") version "1.1.0-SNAPSHOT"
 }
 
-kotlin {
-    auron {
-        library()
+//TODO: Separate SDK into SDK and SDK-COMPOSE
+auron {
+    library()
 
-        +Permission.LOCATION
+    dependencies {
+        implementation(auron.voyager.navigator)
     }
 
-    jvm()
-
-sourceSets {
-        commonMain.dependencies {
-            implementation(compose.runtime)
-            implementation(auron.sdk)
-        }
-    }
-
+    +Permission.LOCATION
 }

@@ -6,13 +6,9 @@
 - have some parts of the android api simplified
 - have an easy api for permissions
 
-1. You need to add those plugins in your `plugins { ... }` block:
-    - `id("com.android.application") version "8.7.3"` or `id("com.android.library") version "8.7.3"`
-   \* based on your project type
-    - `kotlin("multiplatform")`
-2. Now add the auron plugin by using `id("io.instah.Auron-Gradle") version "1.1.0"` *there are no snapshots or
-unstable releases as Auron has now switched to a system where unstable behavior is annotated with an opt-ins
-3. Download the android sdk version `35`
+1. Add the auron plugin by using `id("io.instah.Auron-Gradle") version "1.1.0"` *for the newest features append
+`-SNAPSHOT` to the version
+2. Download the android sdk version `35`
 
 You should be now able to easily configure your project with auron!
 

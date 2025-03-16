@@ -17,7 +17,7 @@ gradlePlugin {
     plugins {
         create("Gradle") {
             id = "io.instah.Auron-Gradle"
-            implementationClass = "AuronPlugin"
+            implementationClass = "io.instah.auron.gradlePlugin.AuronPlugin"
         }
     }
 }
@@ -67,6 +67,7 @@ dependencies {
     implementation("org.jetbrains.compose:compose-gradle-plugin:1.7.3")
     implementation("org.jetbrains.kotlin.plugin.compose:org.jetbrains.kotlin.plugin.compose.gradle.plugin:2.1.10")
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.8.0")
+    implementation("com.github.ajalt.mordant:mordant:3.0.2")
     implementation(project(":Permissions"))
 }
 

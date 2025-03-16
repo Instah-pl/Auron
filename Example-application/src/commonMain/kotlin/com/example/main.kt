@@ -16,7 +16,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import io.instah.auron.auronApp
+import io.instah.auron.appSdk.auronApp
 import io.instah.auron.sdk.App
 import io.instah.auron.sdk.interaction.onResume
 import io.instah.auron.sdk.ui.Center

@@ -48,3 +48,4 @@ bin/
 /local.properties
 /gradlew
 /gradlew.bat
+/kotlin-js-store/

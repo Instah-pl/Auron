@@ -1,4 +1,7 @@
+@file:OptIn(ExperimentalWasmDsl::class)
+
 import com.vanniktech.maven.publish.SonatypeHost
+import org.jetbrains.kotlin.gradle.ExperimentalWasmDsl
 
 plugins {
     kotlin("multiplatform")
@@ -18,9 +21,13 @@ kotlin {
 
     jvm()
 
+    wasmJs {
+        browser()
+    }
+
     sourceSets {
         androidMain.dependencies {
-            api("androidx.activity:activity-compose:1.10.0")
+            api("androidx.activity:activity-compose:1.10.1")
             compileOnly(project(":Main-Link-Dummy"))
         }
 
